@@ -21,7 +21,25 @@ public class MarkdownParse {
                 continue;
             }
             int openParen = markdown.indexOf("(", nextCloseBracket);
-            int closeParen = markdown.indexOf(")", openParen);
+            int openParenLoop = openParen;
+            int closeParen = markdown.indexOf(")", openParen+1);
+            int closeParenLoop = closeParen;
+            int openParenCounter = 1;
+            int closeParenCounter = 0;
+            int minParen = openParen+1;
+            while(openParenCounter > closeParenCounter) {
+                openParenLoop = markdown.indexOf("(", minParen);
+                closeParenLoop = markdown.indexOf(")", minParen);
+                if(openParenLoop != -1 && openParenLoop < closeParenLoop) {                    
+                    openParenCounter++;
+                    minParen = openParenLoop+1;
+                }
+                else {
+                    closeParenCounter++;
+                    minParen = closeParenLoop+1;
+                }
+                closeParen = closeParenLoop;
+            }
             if(openParen == -1 || closeParen == -1) {
                 break;
             }
